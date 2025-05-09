@@ -1,8 +1,8 @@
-## QTPFS foundational desync
+## QTPFSv2 foundational desync
 
 ### Environment
 
-* zk: v1.13.4.3
+* zk: v1.13.4.3 (see below for changes to force QTPFS)
 * engine: `rel2503-dh`, should be around 2025.04.04.
 
 ### Abstract
@@ -38,4 +38,34 @@ deacf22c8afcc6dc113b51d0037ffd6fc1674a4c Tue Oct 24 19:23:23 2023 +0100 CRASH
 8e1a0e6443b8d10a229669aefdea67212c4494d0 Tue Aug 22 02:11:43 2023 +0200 GOOD
 ``` 
 
+### ZK patch
 
+Use this
+
+```diff
+diff --git a/LuaRules/engine_compat.lua b/LuaRules/engine_compat.lua
+index 76815aa56..2f1f3f8d9 100644
+--- a/LuaRules/engine_compat.lua
++++ b/LuaRules/engine_compat.lua
+@@ -771,7 +771,7 @@ if not Script.IsEngineMinVersion(105, 0, 2182) then
+ 
+        if UnitDefs then
+                for _, unitDef in pairs (UnitDefs) do
+-                       unitDef.buildeeBuildRadius = 64 -- arbitrary
++                       --unitDef.buildeeBuildRadius = 64 -- arbitrary
+                end
+        end
+ end
+diff --git a/gamedata/modrules.lua b/gamedata/modrules.lua
+index f3595bf19..7d97110ce 100644
+--- a/gamedata/modrules.lua
++++ b/gamedata/modrules.lua
+@@ -15,7 +15,7 @@ if (modoptions and (modoptions.mtpath == 0 or modoptions.mtpath == "0")) then
+ end
+ Spring.Echo("forceSingleThreaded", forceSingleThreaded)
+ 
+-local pathExperiment = Script.IsEngineMinVersion and Script.IsEngineMinVersion(2025, 3, 0)
++local pathExperiment = true
+ 
+ local modrules  = {
+```
