@@ -41,7 +41,7 @@ deacf22c8afcc6dc113b51d0037ffd6fc1674a4c Tue Oct 24 19:23:23 2023 +0100 CRASH
 
 ### ZK patch
 
-Use this
+Use this, first part is just for old engines, second part is important so it will use QTPFS instead of HAPFS.
 
 ```diff
 diff --git a/LuaRules/engine_compat.lua b/LuaRules/engine_compat.lua
