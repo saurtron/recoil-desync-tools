@@ -22,7 +22,7 @@ For what I seen eventually it marks areas dirty and enqueues `QTPFS::PathCache::
 
 I investigated what's up with the diverging order, since not sure it's by design, or an issue with sync and it does come from `LuaPathFinder::RequestPath` calling into `QTPFS::PathManager::RequestPath` that can be called from synced or unsynced. It's suppossed to support unsynced calling, but don't think that's the case, maybe it is for HAPFS and QTPFSv1, but not QTPFSv2 atm.
 
-I think the `for_mt` for `UpdateNodeLayer` inside `QTPFS::PathManager::Update` can also cause slight desync. Didnt see a desync itself, but I think I seen divergence, can investigate that later.
+note: I think the `for_mt` for `UpdateNodeLayer` inside `QTPFS::PathManager::Update` can also cause slight desync. Didnt see a desync itself, but I think I seen divergence, can investigate that later.
 
 This desync hits hard on ZK and not BAR is probably because bar doesn't use lua RequestPath at least from desynced, they have couple uses but seem niche, ZK on the other hand uses it in several widgets and gadgets since they use it to check IsTargetReachable.
 
