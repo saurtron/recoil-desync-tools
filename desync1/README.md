@@ -4,6 +4,7 @@
 
 * zk: v1.13.4.3 (see below for changes to force QTPFS)
 * engine: `rel2503-dh`, should be around 2025.04.04.
+* known good version: 8e1a0e6443b8d10a229669aefdea67212c4494d0, before QTPFSv2 was introduced.
 
 ### Abstract
 
