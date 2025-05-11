@@ -9,12 +9,16 @@ def extract_frame(text):
     return int(frame)
 
 def should_process(text):
+    if not b'SyncLog' in text:
+        if b'[Path]' in text:
+            return True
+        return False
     if b'StartMovingRaw' in text:
         return False
-    if b'P---' in text:
-        return False
-    if b'PathDirty' in text:
-        return False
+    #if b'P---' in text:
+    #    return False
+    #if b'PathDirty' in text:
+    #    return False
     return True
     if b'FollowPath0' in text:
         return False
@@ -35,9 +39,13 @@ def print_data(queue, data):
             if b'Desync' in text:
                 desync_frame = extract_frame(text)
                 print("DESYNC", text, desync_frame)
-            if text.strip(b' \n') and b'SyncLog' in text and should_process(text):
+            if text.strip(b' \n') and should_process(text):
                 f = extract_frame(text)
-
+                if b'[Path]' in text:
+                    if not desync_frame and f > 20000:
+                        text = text.replace(b"000 ", b" ")
+                        print("->", text)
+                    return data[found+1:]
                 text = text.replace(b"SyncWaypoints", b"SW") # <- this
                 text = text.replace(b"StartMovingRaw", b"SMR")
                 text = text.replace(b"UpdateTraversalPlan0", b"UTP") # <- this
@@ -82,19 +90,29 @@ class Runner:
     def __init__(self, queue, state):
         self.queue = queue
         self.state = state
+        self.proc = None
+    def kill(self):
+        if self.proc:
+            self.proc.kill()
+    def alive(self):
+        return not self.proc is None
     def run(self):
         cmd = self.state.get_cmd()
         #p = subprocess.Popen(self.cmd, stdout=subprocess.PIPE, bufsize=128, pipesize=128)
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, bufsize=128000000)
+        self.proc = p
 
         data = b""
 
         while not self.state.finished:
-            data += p.stdout.read(128)
+            new_data = p.stdout.read(128)
+            if new_data:
+                data += new_data
 
-            if b"\n" in data:
-                data = print_data(self.queue, data)
+                if b"\n" in data:
+                    data = print_data(self.queue, data)
 
         p.terminate()
+        self.proc = None
 
 
