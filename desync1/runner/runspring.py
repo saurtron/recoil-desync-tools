@@ -34,14 +34,13 @@ class ThreadedServer(object):
             threading.Thread(target = self.listenToClient,args = (client,address)).start()
 
     def check_data(self, data):
-        found = -1
-        while found == -1:
+        found = data.find(b"\n")
+        while found > -1:
+            text = data[:found+1]
+            if text.strip(b' \n'):
+                self.check_line(text)
+            data = data[found+1:]
             found = data.find(b"\n")
-            if found > -1:
-                text = data[:found+1]
-                if text.strip(b' \n'):
-                    self.check_line(text)
-                data = data[found+1:]
         return data
 
     def check_line(self, data):

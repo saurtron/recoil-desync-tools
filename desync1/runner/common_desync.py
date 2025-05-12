@@ -57,7 +57,7 @@ def print_data(queue, data):
                 text = text.replace(b"values:", b"")
                 text = text.replace(b"float3", b"")
                 if not desync_frame or f < desync_frame + 3:
-                    if f > 200:
+                    if f > 0:
                         queue.put(text.replace(b'[SyncLog]', b''))
             data = data[found+1:]
     return data
