@@ -12,8 +12,6 @@ Both computers use `unit_autofight.lua` widget, so I don't have to click anythin
  
 The "other" computer (I'm usually coding at the host) runs in a loop where it listens for host to ready up and starts the game automatically, so most of the time I don't need to go to the other computer to touch anything.
 
-The only problem I have with this setup, is log sending is a bit too slow for my taste, so I can't add 1000s of things at the same time, in some cases it can be alleviated knowing more or less the desync frame, in that case it can send from around that frame and be much quicker, generally it doesnt slow me too much but would like to make it 10x faster if possible. Could be something about the python network code.
-
 Still, the setup is very flexible since I just need to LOG_S whatever I want and can then filter and match inside python, so once an initial checksum fail is found I can keep deeping into the code and engine behaviour.
 
 Also, since sometimes information can desync before actual desync happens, or very low occurrence desyncs can be nullified most of the time because of other conditions before they reach actual desync.
